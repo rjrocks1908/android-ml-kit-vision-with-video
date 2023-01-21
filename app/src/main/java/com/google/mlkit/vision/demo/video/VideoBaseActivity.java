@@ -1,9 +1,11 @@
 package com.google.mlkit.vision.demo.video;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.util.Size;
 import android.view.View;
@@ -27,10 +29,13 @@ import com.google.mlkit.vision.demo.java.VisionProcessorBase;
 import com.google.mlkit.vision.demo.java.barcodescanner.BarcodeScannerProcessor;
 import com.google.mlkit.vision.demo.java.facedetector.FaceDetectorProcessor;
 import com.google.mlkit.vision.demo.java.labeldetector.LabelDetectorProcessor;
+import com.google.mlkit.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.google.mlkit.vision.demo.java.segmenter.SegmenterProcessor;
 import com.google.mlkit.vision.demo.java.textdetector.TextRecognitionProcessor;
 import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
+import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
+import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,9 @@ public abstract class VideoBaseActivity extends AppCompatActivity{
     private static final String IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)";
     private static final String CUSTOM_AUTOML_LABELING = "Custom AutoML Image Labeling (Flower)";
     private static final String SELFIE_SEGMENTATION = "Selfie Segmentation";
+    private static final String POSE_DETECTION = "Pose Detection";
+
+    public static String chosenFileName;
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
@@ -92,8 +100,10 @@ public abstract class VideoBaseActivity extends AppCompatActivity{
             w = desiredSize;
             h = Math.round((height/(float)width) * w);
         }else{
-            h = desiredSize;
-            w = Math.round((width/(float)height) * h);
+//            h = desiredSize;
+//            w = Math.round((width/(float)height) * h);
+            h = 640;
+            w = 360;
         }
         return new Size(w, h);
     }
@@ -164,6 +174,19 @@ public abstract class VideoBaseActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHOOSE_VIDEO && resultCode == RESULT_OK) {
             // In this case, imageUri is returned by the chooser, save it.
+            Uri returnUri = data.getData();
+            Cursor returnCursor =
+                    getContentResolver().query(returnUri, null, null, null, null);
+            /*
+             * Get the column indexes of the data in the Cursor,
+             * move to the first row in the Cursor, get the data,
+             * and display it.
+             */
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            chosenFileName = returnCursor.getString(nameIndex);
+            Log.e("Path",returnCursor.getString(nameIndex));
+            Log.e("Path", data.getData().getPath());
             setupPlayer(data.getData());
         }
     }
@@ -171,13 +194,14 @@ public abstract class VideoBaseActivity extends AppCompatActivity{
     private void populateProcessorSelector() {
         Spinner featureSpinner = findViewById(R.id.processor_selector);
         List<String> options = new ArrayList<>();
-        options.add(FACE_DETECTION);
-        options.add(BARCODE_SCANNING);
-        options.add(TEXT_RECOGNITION);
-        options.add(IMAGE_LABELING);
-        options.add(IMAGE_LABELING_CUSTOM);
-        options.add(CUSTOM_AUTOML_LABELING);
-        options.add(SELFIE_SEGMENTATION);
+//        options.add(FACE_DETECTION);
+//        options.add(BARCODE_SCANNING);
+//        options.add(TEXT_RECOGNITION);
+//        options.add(IMAGE_LABELING);
+//        options.add(IMAGE_LABELING_CUSTOM);
+//        options.add(CUSTOM_AUTOML_LABELING);
+//        options.add(SELFIE_SEGMENTATION);
+        options.add(POSE_DETECTION);
 
         // Creating adapter for featureSpinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
@@ -238,6 +262,12 @@ public abstract class VideoBaseActivity extends AppCompatActivity{
                     break;
                 case SELFIE_SEGMENTATION:
                     imageProcessor = new SegmenterProcessor(this, /* isStreamMode= */ true);
+                    break;
+                case POSE_DETECTION:
+                    AccuratePoseDetectorOptions poseDetectorOptions = new AccuratePoseDetectorOptions.Builder()
+                            .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE).build();
+                    imageProcessor = new PoseDetectorProcessor(this, poseDetectorOptions, true, true,
+                            true, true, true);
                     break;
                 default:
             }

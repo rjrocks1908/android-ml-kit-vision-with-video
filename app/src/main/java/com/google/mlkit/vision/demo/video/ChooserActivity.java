@@ -58,15 +58,15 @@ public final class ChooserActivity extends AppCompatActivity
   private static final int PERMISSION_REQUESTS = 1;
 
   private static final Class<?>[] CLASSES =new Class<?>[] {
-          VideoGLESActivity.class,
-          VideoTextureViewActivity.class,
-          VideoRawDecoderDataActivity.class
+//          VideoGLESActivity.class,
+          VideoTextureViewActivity.class
+//          VideoRawDecoderDataActivity.class
   };
 
   private static final int[] DESCRIPTION_IDS =new int[] {
-          R.string.desc_video_opengles_activity,
-          R.string.desc_video_textureview_activity,
-          R.string.desc_video_rawdecoderdata_activity
+//          R.string.desc_video_opengles_activity,
+          R.string.desc_video_textureview_activity
+//          R.string.desc_video_rawdecoderdata_activity
   };
 
   @Override

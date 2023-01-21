@@ -155,6 +155,7 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
   @Override
   public synchronized void processByteBuffer(
       ByteBuffer data, final FrameMetadata frameMetadata, final GraphicOverlay graphicOverlay) {
+
     latestImage = data;
     latestImageMetaData = frameMetadata;
     if (processingImage == null && processingMetaData == null) {

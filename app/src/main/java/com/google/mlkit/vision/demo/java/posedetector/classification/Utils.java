@@ -89,4 +89,15 @@ public class Utils {
       iterator.set(multiply(iterator.next(), multiple));
     }
   }
+
+  public static PointF3D divide(PointF3D point, float a, float b) {
+    return PointF3D.from(point.getX() / a, point.getY() / b, point.getZ() / a);
+  }
+
+  public static void divideAll(List<PointF3D> pointsList, float a, float b) {
+    ListIterator<PointF3D> iterator = pointsList.listIterator();
+    while (iterator.hasNext()) {
+      iterator.set(divide(iterator.next(), a, b));
+    }
+  }
 }

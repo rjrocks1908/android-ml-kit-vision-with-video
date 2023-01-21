@@ -13,7 +13,7 @@
     <string name="desc_still_image_activity" translatable="false">Vision detectors demo with a still image</string>
     <string name="desc_camerax_live_preview_activity" translatable="false">Vision detectors demo with live preview using CameraX. Note that CameraX is only supported on API 21+</string>
     <string name="desc_cameraxsource_demo_activity" translatable="false">Object detection with custom classifier using ML Kit CameraXSource API. Note that CameraX is only supported on API 21+</string>
-    <string name="desc_video_textureview_activity" translatable="false">Vision detectors demo with a video (TextureView)</string>
+    <string name="desc_video_textureview_activity" translatable="false"></string>
     <string name="desc_video_opengles_activity" translatable="false">Vision detectors demo with a video (OpenGL ES)</string>
     <string name="desc_video_rawdecoderdata_activity" translatable="false">Vision detectors demo with a video (Raw Decoder Data)</string>
     <string name="download_error" translatable="false">Download error</string>
